@@ -342,10 +342,10 @@ const IndexContent = () => {
       <ModeSelector selectedMode={debuggerMode} onModeChange={setDebuggerMode} />
 
       {/* INSTRUCTIONS */}
-      <div className="z-10 px-6 py-3 border-b border-border bg-card/60 backdrop-blur-sm">
-        <div className="flex items-center gap-3">
+      <div className="z-10 px-4 md:px-6 py-3 border-b border-border bg-card/60 backdrop-blur-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
 
-          <label className="text-sm font-medium text-muted-foreground">
+          <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">
             Instructions:
           </label>
 
@@ -353,7 +353,7 @@ const IndexContent = () => {
             value={userInstructions}
             onChange={(e) => setUserInstructions(e.target.value)}
             placeholder="Describe what changes you want..."
-            className="flex-1 min-h-[60px] bg-background/50"
+            className="flex-1 min-h-[60px] bg-background/50 w-full"
           />
         </div>
       </div>
@@ -378,22 +378,24 @@ const IndexContent = () => {
 
           {/* RIGHT SIDE */}
           <ResizablePanel defaultSize={40} minSize={25}>
-            <ResizablePanelGroup direction="vertical" className="h-full">
+            <ResizablePanelGroup direction="vertical" className="flex-1">
 
               {/* TERMINAL */}
               <ResizablePanel defaultSize={50} minSize={20}>
-                <div className="h-full p-4 bg-muted/10 border-l">
+                <div className="h-full flex flex-col p-3 md:p-4 bg-muted/10 border-l overflow-hidden">
 
-                  <h3 className="text-sm font-bold mb-2">Output Terminal</h3>
+                  <h3 className="text-sm font-bold mb-2 flex-shrink-0">Output Terminal</h3>
 
-                  <EnhancedOutputTerminal
-                    output={output}
-                    status={status}
-                    responseTime={responseTime}
-                    isLoading={isLoading}
-                    onClear={handleClearOutput}
-                    onRefresh={() => handleRun()}
-                  />
+                  <div className="flex-1 min-h-0 overflow-auto">
+                    <EnhancedOutputTerminal
+                      output={output}
+                      status={status}
+                      responseTime={responseTime}
+                      isLoading={isLoading}
+                      onClear={handleClearOutput}
+                      onRefresh={() => handleRun()}
+                    />
+                  </div>
 
                 </div>
               </ResizablePanel>
@@ -402,9 +404,9 @@ const IndexContent = () => {
 
               {/* PATCH VIEWER */}
               <ResizablePanel defaultSize={50} minSize={20}>
-                <div className="h-full p-4 bg-muted/10 border-l">
+                <div className="h-full flex flex-col p-3 md:p-4 bg-muted/10 border-l overflow-hidden">
 
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex justify-between items-center mb-2 flex-shrink-0 gap-2 flex-wrap">
                     <h3 className="text-sm font-bold flex items-center gap-2">
                       Patches Viewer
                       {patches.length > 0 && (
@@ -421,7 +423,7 @@ const IndexContent = () => {
                     )}
                   </div>
 
-                  <div className="overflow-auto h-full space-y-2">
+                  <div className="flex-1 min-h-0 overflow-auto space-y-2 pr-2">
                     {patches.length > 0 ? (
                       patches.map((p, idx) => (
                         <div
@@ -431,19 +433,19 @@ const IndexContent = () => {
                               : "bg-green-500/20 border-green-400"
                             }`}
                         >
-                          <div className="font-mono opacity-70">
+                          <div className="font-mono text-xs opacity-70 break-all">
                             {p.change_type.toUpperCase()} — old:
                             {p.line_old || "-"} → new:{p.line_new || "-"}
                           </div>
 
                           {p.old_text && (
-                            <div className="mt-1 text-red-300 line-through">
+                            <div className="mt-1 text-red-300 line-through text-xs break-all">
                               {p.old_text}
                             </div>
                           )}
 
                           {p.new_text && (
-                            <div className="mt-1 text-green-300">
+                            <div className="mt-1 text-green-300 text-xs break-all">
                               {p.new_text}
                             </div>
                           )}
