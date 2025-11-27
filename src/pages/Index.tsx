@@ -291,7 +291,7 @@ const IndexContent = () => {
   };
 
   return (
-    <div className={`h-screen ${modeBackgrounds[debuggerMode]} flex flex-col overflow-hidden transition-colors duration-700`}>
+    <div className={`min-h-screen ${modeBackgrounds[debuggerMode]} flex flex-col transition-colors duration-700`}>
 
       <div className="fixed inset-0 -z-50">
         <BackgroundDoodles />
@@ -359,12 +359,12 @@ const IndexContent = () => {
       </div>
 
       {/* MAIN LAYOUT */}
-      <div className="flex-1 flex overflow-hidden">
-        <ResizablePanelGroup direction="horizontal" className="h-full">
+      <div className="flex-1 flex min-h-0">
+        <ResizablePanelGroup direction="horizontal" className="flex-1">
 
           {/* LEFT: EDITOR */}
           <ResizablePanel defaultSize={60} minSize={30}>
-            <div className="h-full p-6">
+            <div className="h-full overflow-auto p-4 md:p-6">
               <CodeEditor
                 code={code}
                 onChange={handleEditorChange}
