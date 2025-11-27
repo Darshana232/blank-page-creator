@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BackgroundDoodles } from "@/components/BackgroundDoodles";
 import { ThemeProvider, useTheme } from "next-themes";
+import { ModeSelector, DebuggerMode } from "@/components/ModeSelector";
 
 import {
   ResizablePanelGroup,
@@ -39,48 +40,51 @@ type PatchChange = {
   reason: string;
 };
 
-// Mixed hacker, dark humor, corporate AI messages
-const repairMessages = [
-  // ORIGINAL FUN
-  "🔧 Repairing your code…",
-  "🧠 Analyzing logic and structure…",
-  "🤖 Running self-healing iterations…",
-  "🪄 Applying intelligent fixes…",
-  "📊 Validating output and safety…",
-  "🚀 Finalizing optimized code…",
-
-  // SUPER HACKER MODE
-  "💻 Initiating quantum-accelerated diagnostics…",
-  "🛰️ Uplink established to secret satellite cluster…",
-  "🔓 Bypassing syntax firewalls…",
-  "📡 Intercepting stray semicolons in deep space…",
-  "🧨 Injecting zero-day patches into your functions…",
-  "💾 Downloading restricted compiler intel from Area 51…",
-  "🛸 Negotiating indentation treaties with extraterrestrials…",
-  "🕵️ Secretly writing unit tests behind your back…",
-  "🚁 Deploying tactical recursion drones…",
-  "⚡ Overclocking your logic units to unsafe levels…",
-
-  // DARK HUMOR MODE
-  "💀 Your code died. Performing autopsy…",
-  "🧨 Found bug. Placed C4. Step back.",
-  "🧯 Putting out the dumpster fire in your functions…",
-  "😈 Introducing new bugs to keep old ones company…",
-  "🪦 Rest in peace, missing parenthesis…",
-  "🫠 Melting spaghetti logic…",
-  "🎢 Emotional damage detected. Stabilizing output…",
-  "🤡 Removing clown logic…",
-
-  // CORPORATE EVIL AI MODE
-  "📈 Forwarding your bugs to upper management…",
-  "📊 Selling your bug patterns to advertisers…",
-  "💼 Conducting performance review: your code failed…",
-  "📉 Reducing quality to meet quarterly forecasts…",
-  "🔗 Auditing your indentation for tax evasion…",
-  "📦 Packaging your mistakes as a premium subscription…",
-  "💸 Converting your bugs into billable hours…",
-  "🔒 Encrypting your code and charging for the key…",
-];
+// Mode-specific repair messages
+const repairMessagesByMode: Record<DebuggerMode, string[]> = {
+  hacker: [
+    "💻 Initiating breach protocol…",
+    "🛰️ Uplink established to satellite cluster…",
+    "🔓 Bypassing syntax firewalls…",
+    "📡 Intercepting stray semicolons…",
+    "🧨 Injecting zero-day patches…",
+    "💾 Downloading compiler intel from Area 51…",
+    "🛸 Negotiating indentation treaties…",
+    "🕵️ Writing unit tests behind your back…",
+    "🚁 Deploying tactical recursion drones…",
+    "⚡ Overclocking logic units to unsafe levels…",
+    "🔐 Decrypting indentation anomaly…",
+    "🎯 Target acquired: your broken syntax…",
+  ],
+  "dark-humor": [
+    "💀 Your code died. Performing autopsy…",
+    "🧨 Found bug. Placed C4. Step back.",
+    "🧯 Putting out the dumpster fire…",
+    "😈 Introducing new bugs for company…",
+    "🪦 Rest in peace, missing parenthesis…",
+    "🫠 Melting spaghetti logic…",
+    "🎢 Emotional damage detected. Stabilizing…",
+    "🤡 Removing clown logic…",
+    "☠️ Your code just flatlined at line 4…",
+    "🩸 Bleeding out exceptions everywhere…",
+    "⚰️ Preparing funeral for your functions…",
+    "👻 Haunted by ghost variables…",
+  ],
+  corporate: [
+    "📈 Forwarding bugs to upper management…",
+    "📊 Selling bug patterns to advertisers…",
+    "💼 Performance review: your code failed…",
+    "📉 Reducing quality for quarterly forecasts…",
+    "🔗 Auditing indentation for tax evasion…",
+    "📦 Packaging mistakes as premium subscription…",
+    "💸 Converting bugs into billable hours…",
+    "🔒 Encrypting code and charging for the key…",
+    "💰 Monetizing your runtime errors…",
+    "📋 Filing TPS report on your syntax…",
+    "🏆 Your bugs exceed shareholder expectations…",
+    "⚖️ Escalating to Premium Fixing Department…",
+  ],
+};
 
 const getDynamicIterations = (code: string): number => {
   const lines = code.split("\n").length;
@@ -105,6 +109,7 @@ const IndexContent = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [userInstructions, setUserInstructions] = useState("");
+  const [debuggerMode, setDebuggerMode] = useState<DebuggerMode>("hacker");
 
   const finalCodeRef = useRef("");
   const isShowingFinalRef = useRef(false);
@@ -117,16 +122,17 @@ const IndexContent = () => {
   // Update terminal text while repairing
   const startTerminalAnimation = () => {
     isRepairingRef.current = true;
+    const messages = repairMessagesByMode[debuggerMode];
 
-    setOutput(repairMessages[0]);
+    setOutput(messages[0]);
 
     textUpdateIntervalRef.current = setInterval(() => {
       if (!isRepairingRef.current) return;
 
       messageIndexRef.current =
-        (messageIndexRef.current + 1) % repairMessages.length;
+        (messageIndexRef.current + 1) % messages.length;
 
-      setOutput(repairMessages[messageIndexRef.current]);
+      setOutput(messages[messageIndexRef.current]);
     }, 3500);
   };
 
@@ -277,8 +283,15 @@ const IndexContent = () => {
       ? "shadow-[0_0_14px_rgba(0,200,255,0.9)] scale-[1.04]"
       : "opacity-60";
 
+  // Mode-specific background classes
+  const modeBackgrounds: Record<DebuggerMode, string> = {
+    hacker: "bg-gradient-to-br from-slate-950 via-cyan-950/20 to-slate-950",
+    "dark-humor": "bg-gradient-to-br from-slate-950 via-purple-950/30 to-slate-950",
+    corporate: "bg-gradient-to-br from-slate-950 via-amber-950/20 to-slate-950",
+  };
+
   return (
-    <div className="h-screen bg-[var(--gradient-warm)] flex flex-col overflow-hidden">
+    <div className={`h-screen ${modeBackgrounds[debuggerMode]} flex flex-col overflow-hidden transition-colors duration-700`}>
 
       <div className="fixed inset-0 -z-50">
         <BackgroundDoodles />
@@ -324,6 +337,9 @@ const IndexContent = () => {
 
         </div>
       </header>
+
+      {/* MODE SELECTOR */}
+      <ModeSelector selectedMode={debuggerMode} onModeChange={setDebuggerMode} />
 
       {/* INSTRUCTIONS */}
       <div className="z-10 px-6 py-3 border-b border-border bg-card/60 backdrop-blur-sm">
