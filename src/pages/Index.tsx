@@ -360,7 +360,7 @@ const IndexContent = () => {
 
       {/* MAIN LAYOUT */}
       <div className="flex-1 flex min-h-0" style={{ minHeight: '600px' }}>
-        <ResizablePanelGroup direction="horizontal" className="flex-1">
+        <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-[600px]">
 
           {/* LEFT: EDITOR */}
           <ResizablePanel defaultSize={60} minSize={30}>
